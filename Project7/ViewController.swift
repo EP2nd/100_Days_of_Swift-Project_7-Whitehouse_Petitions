@@ -3,9 +3,17 @@ import UIKit
 class ViewController: UITableViewController {
     
     var petitions = [Petition]()
+    var filteredPetitions = [Petition]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let filterButton = UIBarButtonItem(title: "Filter", style: .plain, target: self, action: #selector(promptForFiltration))
+        let resetButton = UIBarButtonItem(title: "Reset", style: .plain, target: self, action: #selector (resetPetitionsList))
+        
+        navigationItem.leftBarButtonItems = [filterButton, resetButton]
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Credits", style: .plain, target: self, action: #selector(openTapped))
         
         // let urlString = "https://api.whitehouse.gov/v1/petitions.json?limit=100"
         let urlString: String
@@ -33,6 +41,7 @@ class ViewController: UITableViewController {
         
         if let jsonPetitions = try? decoder.decode(Petitions.self, from: json) {
             petitions = jsonPetitions.results
+            filteredPetitions = petitions
             tableView.reloadData()
         }
     }
@@ -43,13 +52,52 @@ class ViewController: UITableViewController {
         present(alertController, animated: true)
     }
     
+    @objc func openTapped() {
+        let alertController = UIAlertController(title: nil, message: "The data comes from the \"We The People\" API of the Whitehouse.", preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "Close", style: .cancel))
+        alertController.popoverPresentationController?.barButtonItem = self.navigationItem.rightBarButtonItem
+        present(alertController, animated: true)
+    }
+    
+    @objc func promptForFiltration() {
+        let alertController = UIAlertController(title: "Enter a keyword", message: nil, preferredStyle: .alert)
+        alertController.addTextField()
+        
+        let submitKeyword = UIAlertAction(title: "Filter", style: .default) { [weak self, weak alertController] action in
+            
+            guard let keyword = alertController?.textFields?[0].text else { return }
+            self?.filter(keyword)
+        }
+        alertController.addAction(submitKeyword)
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .default))
+        
+        present(alertController, animated: true)
+    }
+    
+    @objc func resetPetitionsList() {
+        filteredPetitions = petitions
+        tableView.reloadData()
+    }
+    
+    func filter(_ keyword: String) {
+        
+        filteredPetitions.removeAll(keepingCapacity: true)
+        
+        for petition in petitions {
+            if petition.title.lowercased().contains(keyword) {
+                filteredPetitions.append(petition)
+                tableView.reloadData()
+            }
+        }
+    }
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return petitions.count
+        return filteredPetitions.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        let petition = petitions[indexPath.row]
+        let petition = filteredPetitions[indexPath.row]
         cell.textLabel?.text = petition.title
         cell.detailTextLabel?.text = petition.body
         return cell
@@ -57,7 +105,7 @@ class ViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let viewController = DetailViewController()
-        viewController.detailItem = petitions[indexPath.row]
+        viewController.detailItem = filteredPetitions[indexPath.row]
         navigationController?.pushViewController(viewController, animated: true)
     }
 }

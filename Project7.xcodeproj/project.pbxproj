@@ -63,14 +63,14 @@
 			isa = PBXGroup;
 			children = (
 				B84452E1281AF31B00560613 /* AppDelegate.swift */,
-				B883383F281FD8FE0037E3FF /* DetailViewController.swift */,
 				B84452E3281AF31C00560613 /* SceneDelegate.swift */,
+				B84452E5281AF31C00560613 /* ViewController.swift */,
+				B883383F281FD8FE0037E3FF /* DetailViewController.swift */,
 				B8496170281D90C1006A3504 /* Petition.swift */,
 				B8496172281D92A1006A3504 /* Petitions.swift */,
-				B84452E5281AF31C00560613 /* ViewController.swift */,
 				B84452E7281AF31C00560613 /* Main.storyboard */,
-				B84452EA281AF31F00560613 /* Assets.xcassets */,
 				B84452EC281AF31F00560613 /* LaunchScreen.storyboard */,
+				B84452EA281AF31F00560613 /* Assets.xcassets */,
 				B84452EF281AF31F00560613 /* Info.plist */,
 			);
 			path = Project7;
