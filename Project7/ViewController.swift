@@ -81,12 +81,17 @@ class ViewController: UITableViewController {
     
     func filter(_ keyword: String) {
         
-        filteredPetitions.removeAll(keepingCapacity: true)
-        
-        for petition in petitions {
-            if petition.title.lowercased().contains(keyword) {
-                filteredPetitions.append(petition)
-                tableView.reloadData()
+        DispatchQueue.global().async {
+            self.filteredPetitions.removeAll(keepingCapacity: true)
+            for petition in self.petitions {
+                if petition.title.lowercased().contains(keyword) {
+                    self.filteredPetitions.append(petition)
+                    
+                    //self.tableView.reloadData()
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                    }
+                }
             }
         }
     }
