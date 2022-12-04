@@ -1,7 +1,15 @@
+//
+//  DetailViewController.swift
+//  Project7
+//
+//  Created by Edwin Przeźwiecki Jr. on 28/04/2022.
+//
+
 import UIKit
 import WebKit
 
 class DetailViewController: UIViewController {
+    
     var webView: WKWebView!
     var detailItem: Petition?
     
@@ -15,6 +23,7 @@ class DetailViewController: UIViewController {
 
         guard let detailItem = detailItem else { return }
         
+        /// Challenge 3:
         let html = """
 <html>
 <body style="background-color:powderblue;">
@@ -31,5 +40,4 @@ class DetailViewController: UIViewController {
         
         webView.loadHTMLString(html, baseURL: nil)
     }
-    
 }
